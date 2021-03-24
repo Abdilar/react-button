@@ -1,0 +1,200 @@
+$button-color-muted: #444;
+$button-color-white: #fff;
+$button-circle-size: 25px;
+$darken-amount: 8%;
+$disabled-background: #f5f5f5;
+$disabled-border-color: #dddddd;
+$disabled-color: #adadad;
+$transition: .1s ease-in-out;
+
+$button-colors: (
+  default: transparent,
+  primary: #1e87f0,
+  secondary: #222,
+  success: #32d296,
+  warning: #faa05a,
+  danger: #f0506e
+);
+
+$button-hover-colors: (
+  default: #f5f5f5,
+  primary: #ebf4fe,
+  secondary: #e8e8e8,
+  success: #eefbf5,
+  warning: #fff6ee,
+  danger: #fef2f4
+);
+
+$button-sizes: (
+  small: 30px,
+  medium: 40px,
+  large: 50px,
+  xlarge: 55px
+);
+
+$button-rounds: (
+  empty: 0,
+  low: 4px,
+  more: 8px,
+  fully: 1000px
+);
+
+$button-variant: (
+  contained
+  outlined
+  text
+);
+
+@mixin getContainedButtonStyle($color) {
+  background-color: map_get($button-colors, $color);
+  @if ($color == default) {
+    color: $button-color-muted;
+    border: 1px solid lighten($button-color-muted, 60%);
+  }
+  @else if ($color != default) {
+    color: $button-color-white;
+    border: 1px solid map_get($button-colors, $color);
+  }
+  &:hover {
+    @if ($color != default) {
+      background-color: darken(map_get($button-colors, $color), $darken-amount);
+    }
+    @else if ($color == default) {
+      border-color: darken(lighten($button-color-muted, 50%), $darken-amount);;
+    }
+  }
+}
+
+@mixin getButtonStyle($color, $isText) {
+  background-color: transparent;
+  @if ($color == default) {
+    border: 1px solid;
+    color: $button-color-muted;
+
+    @if ($isText == true) {
+      border-color: transparent;
+    } @else {
+      border-color: lighten($button-color-muted, 60%);
+    }
+  }
+  @else if ($color != default) {
+    border: 1px solid;
+    color: map-get($button-colors, $color);
+
+    @if ($isText == true) {
+      border-color: transparent;
+    } @else {
+      border-color: map-get($button-colors, $color);
+    }
+  }
+  &:hover {
+    background-color: map_get($button-hover-colors, $color);
+  }
+}
+
+.button {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  padding-bottom: 7px;
+  padding-top: 7px;
+  transition: $transition;
+  transition-property: background-color, border-color;
+
+  @each $color in map_keys($button-colors) {
+    &_contained_#{$color} {
+      @extend .button;
+      @include getContainedButtonStyle($color);
+    }
+
+    &_outlined_#{$color} {
+      @extend .button;
+      @include getButtonStyle($color, false);
+    }
+
+    &_text_#{$color} {
+      @extend .button;
+      @include getButtonStyle($color, true);
+    }
+  }
+
+  @each $size in map-keys($button-sizes) {
+    &_#{$size} {
+      min-height: map-get($button-sizes, $size);
+      min-width: 30px + map-get($button-sizes, $size);
+      padding-left: map-get($button-sizes, $size) - 15px;
+      padding-right: map-get($button-sizes, $size) - 15px;
+    }
+  }
+
+  @each $round in map-keys($button-rounds) {
+    &_round__#{$round} {
+      border-radius: map-get($button-rounds, $round);
+    }
+  }
+}
+
+.button_circle {
+  align-items: center;
+  border: none;
+  border-radius: $button-circle-size;
+  cursor: pointer;
+  display: flex;
+  height: $button-circle-size;
+  justify-content: center;
+  outline: none;
+  padding: 6px;
+  transition: background-color .1s ease-in-out;
+  width: $button-circle-size;
+
+  @each $color in map_keys($button-colors) {
+    &_#{$color} {
+      @extend .button_circle;
+      @include getContainedButtonStyle($color);
+    }
+  }
+
+  & svg {
+    circle {
+      stroke: none !important;
+    }
+  }
+}
+
+.button__disabled {
+  color: $disabled-color;
+  cursor: default;
+
+  &_contained {
+    @extend .button__disabled;
+    background-color: $disabled-background;
+    border-color: $disabled-border-color;
+
+    &:hover {
+      @extend .button__disabled_contained;
+    }
+  }
+
+  &_outlined {
+    @extend .button__disabled;
+    background-color: transparent;
+    border-color: $disabled-border-color;
+
+    &:hover {
+      @extend .button__disabled_outlined;
+    }
+  }
+
+  &_text {
+    @extend .button__disabled;
+    background-color: transparent;
+    border-color: transparent;
+
+    &:hover {
+      @extend .button__disabled_text;
+    }
+  }
+
+}
