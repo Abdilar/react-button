@@ -97,11 +97,16 @@ $button-variant: (
   -moz-border-radius: 4px;
   border-radius: 4px;
   cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
   outline: none;
   padding-bottom: 7px;
-  padding-top: 7px;
+  padding-top: 6px;
+  text-decoration: none;
   transition: $transition;
   transition-property: background-color, border-color;
+  user-select: none;
 
   @each $color in map_keys($button-colors) {
     &_contained_#{$color} {
@@ -127,6 +132,11 @@ $button-variant: (
       padding-left: map-get($button-sizes, $size) - 15px;
       padding-right: map-get($button-sizes, $size) - 15px;
     }
+
+    &_icon_#{$size} {
+      height: map-get($button-sizes, $size);
+      width: map-get($button-sizes, $size);
+    }
   }
 
   @each $round in map-keys($button-rounds) {
@@ -134,32 +144,21 @@ $button-variant: (
       border-radius: map-get($button-rounds, $round);
     }
   }
-}
 
-.button_circle {
-  align-items: center;
-  border: none;
-  border-radius: $button-circle-size;
-  cursor: pointer;
-  display: flex;
-  height: $button-circle-size;
-  justify-content: center;
-  outline: none;
-  padding: 6px;
-  transition: background-color .1s ease-in-out;
-  width: $button-circle-size;
-
-  @each $color in map_keys($button-colors) {
-    &_#{$color} {
-      @extend .button_circle;
-      @include getContainedButtonStyle($color);
-    }
+  &_icon {
+    align-items: center;
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: center;
+    min-height: initial;
+    min-width: initial;
+    overflow: hidden;
+    padding: 4px;
   }
 
-  & svg {
-    circle {
-      stroke: none !important;
-    }
+  &_deactivate {
+    cursor: default;
+    pointer-events: none;
   }
 }
 
@@ -196,5 +195,55 @@ $button-variant: (
       @extend .button__disabled_text;
     }
   }
+}
 
+.cursor {
+  &_default {
+    cursor: default;
+  }
+}
+
+.display_inline_block {
+  display: inline-block;
+}
+
+.content {
+  &__hidden {
+    visibility: hidden;
+  }
+
+  &__none {
+    display: none;
+  }
+}
+
+.react_link {
+  &[aria-disabled="true"] {
+    pointer-events: none;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1)
+  }
+
+  50% {
+    -webkit-transform: scale3d(1.05,1.05,1.05);
+    transform: scale3d(1.05,1.05,1.05)
+  }
+
+  to {
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1)
+  }
+}
+
+.animate__pulse {
+  -webkit-animation-name: pulse;
+  animation-name: pulse;
+  -webkit-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  animation-duration: .3s;
 }

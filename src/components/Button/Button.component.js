@@ -1,20 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import CountdownTimer from "@sakit-sa/countdown-timer";
-import Spinner, {NAME} from "@sakit-sa/react-spinner";
-import {COLOR, ROUNDED, SIZE, SPINNER_RATIO, TYPE, VARIANT} from "../../configs/variables";
-import {isFunction, isNumber} from "../../utils/functions";
+import {NAME} from "@sakit-sa/react-spinner";
+import {COLOR, ROUNDED, SIZE, SPINNER_RATIO, TARGET, TYPE, VARIANT} from "../../configs/variables";
+import {isEmpty, isEmptyString, isFunction, isNumber} from "../../utils/functions";
+import {Content, Link} from '../';
 
 import style from '../index.module.scss';
 
 const Button = (props) => {
   const [activeTimer, setActiveTimer] = useState(props.activeTimer);
-  const [disabled, setDisabled] = useState(props.disabled);
-  const [showChildren, setShowChildren] = useState(!props.activeTimer && !props.isLoading);
   const [spinnerRatio, setSpinnerRatio] = useState(props.ratio);
-  const disabledClass = props.disabled ? `button__disabled_${props.variant}` : '';
+  const [buttonStyles, setButtonStyles] = useState({});
+  const buttonRef = useRef();
+  const disabledClass = props.disabled ? style[`button__disabled_${props.variant}`] : '';
+  const iconClass = props.isIcon ? `${style.button_icon} ${style[`button_icon_${props.size}`]}` : '';
+  const classes = `${style[`button_${props.variant}_${props.color}`]} ${style[`button_round__${props.round}`]} ${style[`button_${props.size}`]} ${iconClass} ${disabledClass} ${activeTimer || props.isLoading || props.disabled ? style.button_deactivate : ''}`;
+  const {button = ''} = props.className;
 
   useEffect(() => {
+    console.log('REF: ', buttonRef);
     getRatio();
   }, []);
 
@@ -23,77 +27,106 @@ const Button = (props) => {
   }, [props.size]);
 
   useEffect(() => {
-    const isDeactivate = props.activeTimer;
-    setShowChildren(!isDeactivate);
-    setActiveTimer(isDeactivate);
-  }, [props.activeTimer]);
+    if (!props.time) return; // TODO: REMOVE this line when countdownTimer fix it
 
-  useEffect(() => {
-    // if (activeTimer) return;
-    const isDeactivate = props.isLoading;
-    setShowChildren(!isDeactivate);
-    setActiveTimer(!isDeactivate);
-  }, [props.isLoading]);
+    calcButtonStyles();
+    setActiveTimer(props.activeTimer);
+  }, [props.activeTimer]);
 
   const getRatio = () => {
     const ratio = isNumber(props.spinnerRatio) ? props.spinnerRatio : SPINNER_RATIO[props.size];
     setSpinnerRatio(ratio);
-  }
+  };
+
+  const calcButtonStyles = () => {
+    if (props.activeTimer) {
+      const buttonEl = buttonRef.current;
+      const minWidth = buttonEl.offsetWidth;
+      const minHeight = buttonEl.offsetHeight;
+      setButtonStyles({minWidth, minHeight});
+    } else {
+      setButtonStyles({});
+    }
+  };
 
   const handleCompleteTime = () => {
-    setShowChildren(true);
     setActiveTimer(false);
+    setButtonStyles({});
     isFunction(props.onCompleteTime) && props.onCompleteTime();
-  }
+  };
 
-  const handleClick = () => {
-    if (props.disabled) return;
-    isFunction(props.onClick) && props.onClick();
-  }
+  const handleClick = (e) => {
+    if (props.disabled || activeTimer || props.isLoading) return;
+    animateContent();
+    isFunction(props.onClick) && props.onClick(e);
+  };
+
+  const animateContent = () => {
+    if (!props.animatable || (isEmpty(buttonRef.current) && isEmpty(buttonRef.current.children))) return;
+    const contentEl = buttonRef.current.children[0];
+    contentEl.classList.add(style.animate__pulse);
+    setTimeout(() => contentEl.classList.remove(style.animate__pulse), 300);
+  };
 
   return (
-    <button
-      disabled={disabled}
-      type={props.type}
-      className={`${style[`button_${props.variant}_${props.color}`]} ${style[`button_round__${props.round}`]} ${style[`button_${props.size}`]} ${style[disabledClass]}`}
-      onClick={handleClick}
-    >
-      {
-        showChildren ? props.children : (
-          activeTimer ? (
-            <CountdownTimer time={props.time} format={props.timeFormat} className={props.timeClasses} onComplete={handleCompleteTime} />
-          ) : (
-            <Spinner isLoading={props.isLoading} name={props.spinnerName} ratio={spinnerRatio} className={props.spinnerClasses} />
-          )
-        )
-      }
-    </button>
+    isEmptyString(props.href) ? (
+      <button
+        ref={buttonRef}
+        disabled={props.disabled}
+        type={props.type}
+        className={`${classes} ${button}`}
+        style={buttonStyles}
+        onClick={handleClick}
+      >
+        <Content onCompletedTime={handleCompleteTime} activatedTimer={activeTimer} spinnerRatio={spinnerRatio} {...props} />
+      </button>
+    ) : (
+      <Link
+        disabled={props.disabled}
+        ref={buttonRef}
+        className={`${classes} ${button}`}
+        href={props.href}
+        target={props.hrefTarget}
+        style={buttonStyles}
+        onClick={handleClick}
+      >
+        <Content onCompletedTime={handleCompleteTime} activatedTimer={activeTimer} spinnerRatio={spinnerRatio} {...props} />
+      </Link>
+    )
   )
-}
+};
 
 Button.defaultProps = {
   activeTimer: false,
-  color: COLOR.PRIMARY, // DONE
-  disabled: false, // DONE
+  animatable: false,
+  className: {},
+  color: COLOR.PRIMARY,
+  disabled: false,
   href: '',
+  hrefTarget: TARGET.SELF,
+  isIcon: false,
   isLoading: false,
-  round: ROUNDED.LOW, // DONE
-  size: SIZE.SMALL, // DONE
+  round: ROUNDED.LOW,
+  size: SIZE.SMALL,
   spinnerClasses: {},
   spinnerName: NAME.UIKIT,
   time: 0,
   timeClasses: {},
   timeFormat: 'MM:SS',
-  type: TYPE.BUTTON, // DONE
-  variant: VARIANT.TEXT // DONE
+  type: TYPE.BUTTON,
+  variant: VARIANT.CONTAINED
 };
 
 Button.propTypes = {
   activeTimer: PropTypes.bool,
+  animatable: PropTypes.bool,
+  className: PropTypes.object,
   color: PropTypes.string,
   children: PropTypes.node.isRequired,
   disabled: PropTypes.bool,
   href: PropTypes.string,
+  hrefTarget: PropTypes.string,
+  isIcon: PropTypes.bool,
   isLoading: PropTypes.bool,
   round: PropTypes.string,
   size: PropTypes.string,
@@ -107,6 +140,6 @@ Button.propTypes = {
   variant: PropTypes.string,
   onClick: PropTypes.func,
   onCompleteTime: PropTypes.func
-}
+};
 
 export default Button;
