@@ -4,6 +4,7 @@ import style from '../index.module.scss';
 
 const Link = React.forwardRef((props, ref) => (
   <a
+    id={props.id}
     ref={ref}
     className={`${style.react_link} ${props.className}`}
     href={props.href}

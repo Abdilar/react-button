@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {NAME} from "@sakit-sa/react-spinner";
 import {COLOR, ROUNDED, SIZE, SPINNER_RATIO, TARGET, TYPE, VARIANT} from "../../configs/variables";
-import {isEmpty, isEmptyString, isFunction, isNumber} from "../../utils/functions";
+import {isEmpty, isEmptyString, isFunction, isNumber, randomNumber} from "../../utils/functions";
 import {Content, Link} from '../';
 
 import style from '../index.module.scss';
@@ -18,7 +18,6 @@ const Button = (props) => {
   const {button = ''} = props.className;
 
   useEffect(() => {
-    console.log('REF: ', buttonRef);
     getRatio();
   }, []);
 
@@ -34,7 +33,8 @@ const Button = (props) => {
   }, [props.activeTimer]);
 
   const getRatio = () => {
-    const ratio = isNumber(props.spinnerRatio) ? props.spinnerRatio : SPINNER_RATIO[props.size];
+    const ratio = isNumber(props.spinnerRatio) && !!props.spinnerRatio ? props.spinnerRatio : SPINNER_RATIO[props.size];
+    console.log('RATIO: ', ratio, props.size);
     setSpinnerRatio(ratio);
   };
 
@@ -71,6 +71,7 @@ const Button = (props) => {
   return (
     isEmptyString(props.href) ? (
       <button
+        id={props.id}
         ref={buttonRef}
         disabled={props.disabled}
         type={props.type}
@@ -82,6 +83,7 @@ const Button = (props) => {
       </button>
     ) : (
       <Link
+        id={props.id}
         disabled={props.disabled}
         ref={buttonRef}
         className={`${classes} ${button}`}
@@ -104,6 +106,7 @@ Button.defaultProps = {
   disabled: false,
   href: '',
   hrefTarget: TARGET.SELF,
+  id: `button-${randomNumber(10000)}`,
   isIcon: false,
   isLoading: false,
   round: ROUNDED.LOW,
@@ -126,6 +129,7 @@ Button.propTypes = {
   disabled: PropTypes.bool,
   href: PropTypes.string,
   hrefTarget: PropTypes.string,
+  id: PropTypes.string,
   isIcon: PropTypes.bool,
   isLoading: PropTypes.bool,
   round: PropTypes.string,
