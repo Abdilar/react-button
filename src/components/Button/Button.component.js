@@ -8,13 +8,13 @@ import {Content, Link} from '../';
 import style from '../index.module.scss';
 
 const Button = (props) => {
-  const [activeTimer, setActiveTimer] = useState(props.activeTimer);
+  const [activeTimer, setActiveTimer] = useState(props.activeTimer && !!props.time);
   const [spinnerRatio, setSpinnerRatio] = useState(props.ratio);
   const [buttonStyles, setButtonStyles] = useState({});
   const buttonRef = useRef();
-  const disabledClass = props.disabled ? style[`button__disabled_${props.variant}`] : '';
-  const iconClass = props.isIcon ? `${style.button_icon} ${style[`button_icon_${props.size}`]}` : '';
-  const classes = `${style[`button_${props.variant}_${props.color}`]} ${style[`button_round__${props.round}`]} ${style[`button_${props.size}`]} ${iconClass} ${disabledClass} ${activeTimer || props.isLoading || props.disabled ? style.button_deactivate : ''}`;
+  const disabledClass = props.disabled ? style[`react_button__disabled_${props.variant}`] : '';
+  const iconClass = props.isIcon ? `${style.react_button_icon} ${style[`react_button_icon_${props.size}`]}` : '';
+  const classes = `${style[`react_button_${props.variant}_${props.color}`]} ${style[`react_button_round__${props.round}`]} ${style[`react_button_${props.size}`]} ${iconClass} ${disabledClass} ${activeTimer || props.isLoading || props.disabled ? style.react_button_deactivate : ''}`;
   const {button = ''} = props.className;
 
   useEffect(() => {
@@ -34,7 +34,6 @@ const Button = (props) => {
 
   const getRatio = () => {
     const ratio = isNumber(props.spinnerRatio) && !!props.spinnerRatio ? props.spinnerRatio : SPINNER_RATIO[props.size];
-    console.log('RATIO: ', ratio, props.size);
     setSpinnerRatio(ratio);
   };
 
@@ -64,8 +63,8 @@ const Button = (props) => {
   const animateContent = () => {
     if (!props.animatable || (isEmpty(buttonRef.current) && isEmpty(buttonRef.current.children))) return;
     const contentEl = buttonRef.current.children[0];
-    contentEl.classList.add(style.animate__pulse);
-    setTimeout(() => contentEl.classList.remove(style.animate__pulse), 300);
+    contentEl.classList.add(style.react_animate__pulse);
+    setTimeout(() => contentEl.classList.remove(style.react_animate__pulse), 300);
   };
 
   return (
@@ -105,8 +104,8 @@ Button.defaultProps = {
   color: COLOR.PRIMARY,
   disabled: false,
   href: '',
-  hrefTarget: TARGET.SELF,
-  id: `button-${randomNumber(10000)}`,
+  hrefTarget: TARGET.BLANK,
+  id: `react-button-${randomNumber(10000)}`,
   isIcon: false,
   isLoading: false,
   round: ROUNDED.LOW,

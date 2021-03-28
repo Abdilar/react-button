@@ -1,14 +1,17 @@
 import React from 'react';
+import PropTypes from "prop-types";
+import {randomNumber} from "../../utils/functions";
+import {TARGET} from "../../configs/variables";
 
 import style from '../index.module.scss';
 
 const Link = React.forwardRef((props, ref) => (
   <a
-    id={props.id}
-    ref={ref}
+    aria-disabled={props.disabled}
     className={`${style.react_link} ${props.className}`}
     href={props.href}
-    aria-disabled={props.disabled}
+    id={props.id}
+    ref={ref}
     style={props.style}
     target={props.target}
     onClick={props.onClick}
@@ -16,5 +19,25 @@ const Link = React.forwardRef((props, ref) => (
     {props.children}
   </a>
 ));
+
+Link.defaultProps = {
+  className: '',
+  disabled: false,
+  href: '',
+  id: `react-button-${randomNumber(10000)}`,
+  style: {},
+  target: TARGET.BLANK
+};
+
+Link.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  href: PropTypes.string,
+  id: PropTypes.string,
+  style: PropTypes.object,
+  target: PropTypes.string,
+  onClick: PropTypes.func
+};
 
 export default Link;

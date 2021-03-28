@@ -58,10 +58,13 @@ $button-variant: (
   &:hover {
     @if ($color != default) {
       background-color: darken(map_get($button-colors, $color), $darken-amount);
+      color: $button-color-white;
     }
     @else if ($color == default) {
-      border-color: darken(lighten($button-color-muted, 50%), $darken-amount);;
+      border-color: darken(lighten($button-color-muted, 50%), $darken-amount);
+      color: $button-color-muted;
     }
+    text-decoration: none;
   }
 }
 
@@ -89,20 +92,26 @@ $button-variant: (
   }
   &:hover {
     background-color: map_get($button-hover-colors, $color);
+    text-decoration: none;
+    @if ($color == default) {
+      color: $button-color-muted;
+    }
+    @else if ($color != default) {
+      color: map-get($button-colors, $color);
+    }
   }
 }
 
-.button {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+.react_button {
+  align-items: center;
   cursor: pointer;
+  display: inline-flex;
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
+  justify-content: center;
   outline: none;
-  padding-bottom: 7px;
-  padding-top: 6px;
+  overflow: hidden;
   text-decoration: none;
   transition: $transition;
   transition-property: background-color, border-color;
@@ -110,17 +119,17 @@ $button-variant: (
 
   @each $color in map_keys($button-colors) {
     &_contained_#{$color} {
-      @extend .button;
+      @extend .react_button;
       @include getContainedButtonStyle($color);
     }
 
     &_outlined_#{$color} {
-      @extend .button;
+      @extend .react_button;
       @include getButtonStyle($color, false);
     }
 
     &_text_#{$color} {
-      @extend .button;
+      @extend .react_button;
       @include getButtonStyle($color, true);
     }
   }
@@ -160,54 +169,61 @@ $button-variant: (
     cursor: default;
     pointer-events: none;
   }
+
+  &__disabled {
+    color: $disabled-color;
+    cursor: default;
+
+    &_contained {
+      @extend .react_button__disabled;
+      background-color: $disabled-background;
+      border-color: $disabled-border-color;
+
+      &:hover {
+        @extend .react_button__disabled_contained;
+      }
+    }
+
+    &_outlined {
+      @extend .react_button__disabled;
+      background-color: transparent;
+      border-color: $disabled-border-color;
+
+      &:hover {
+        @extend .react_button__disabled_outlined;
+      }
+    }
+
+    &_text {
+      @extend .react_button__disabled;
+      background-color: transparent;
+      border-color: transparent;
+
+      &:hover {
+        @extend .react_button__disabled_text;
+      }
+    }
+  }
 }
 
-.button__disabled {
-  color: $disabled-color;
-  cursor: default;
-
-  &_contained {
-    @extend .button__disabled;
-    background-color: $disabled-background;
-    border-color: $disabled-border-color;
-
-    &:hover {
-      @extend .button__disabled_contained;
-    }
-  }
-
-  &_outlined {
-    @extend .button__disabled;
-    background-color: transparent;
-    border-color: $disabled-border-color;
-
-    &:hover {
-      @extend .button__disabled_outlined;
-    }
-  }
-
-  &_text {
-    @extend .button__disabled;
-    background-color: transparent;
-    border-color: transparent;
-
-    &:hover {
-      @extend .button__disabled_text;
-    }
-  }
-}
-
-.cursor {
+.react_cursor {
   &_default {
     cursor: default;
   }
 }
 
-.display_inline_block {
-  display: inline-block;
+.react_display_inline {
+  &_block {
+    display: inline-block;
+  }
+
+  &_flex {
+    display: inline-flex;
+  }
 }
 
-.content {
+.react_content {
+  line-height: initial;
   &__hidden {
     visibility: hidden;
   }
@@ -218,6 +234,7 @@ $button-variant: (
 }
 
 .react_link {
+  box-sizing: border-box;
   &[aria-disabled="true"] {
     pointer-events: none;
   }
@@ -240,7 +257,7 @@ $button-variant: (
   }
 }
 
-.animate__pulse {
+.react_animate__pulse {
   -webkit-animation-name: pulse;
   animation-name: pulse;
   -webkit-animation-timing-function: ease-in-out;
