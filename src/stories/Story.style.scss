@@ -1,0 +1,105 @@
+html, body {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  box-sizing: border-box;
+  display: flex !important;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+#root, #root > div.story {
+  font-family: "Proxima Nova";
+  font-size: 12px;
+  flex: 1;
+  height: 100%;
+}
+
+.grid {
+  margin-bottom: 20px;
+
+  & ~ button {
+    margin: 0 10px;
+  }
+}
+
+.wrapper {
+  margin: 10px 0;
+  & > * {
+    margin: 0 10px;
+  }
+
+  &-icon {
+    & > * {
+      font-size: 18px !important;
+    }
+  }
+}
+
+.form-field {
+  margin-bottom: 20px;
+
+  & > label {
+    margin-right: 10px;
+  }
+}
+
+.color {
+  &-lighten-red {
+    background: rgba(255, 207, 250, 0.5) !important;
+    border-radius: 4px;
+  }
+
+  &-lighten-red-style {
+    background: #FFCFFA !important;
+    border-radius: 10px !important;
+    border-color: #ca3a8b !important;
+    box-shadow: 0 2px 5px 0 rgba(#000, .2);
+
+    &:hover {
+      background-color: darken(#ffcffa, 4%) !important;
+    }
+  }
+
+  &-dark-red {
+    color: #ca3a8b;
+  }
+
+  &-black {
+    background-color: #222222;
+    border-radius: 5px;
+    display: inline-flex;
+  }
+
+  &-white {
+    color: #ffffff;
+  }
+
+  &-yellow {
+    color: #ffdd1d;
+  }
+
+  &-red {
+    border-bottom: 4px solid #ff3355;
+  }
+
+  &-blue {
+    border-bottom: 4px solid #00c2ff;
+  }
+
+  &-orange {
+    border-bottom: 4px solid #ff8d00;
+  }
+
+  &-green {
+    border: 2px dashed #51693a;
+    border-radius: 5px;
+    margin: 5px;
+  }
+}
