@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {randomNumber} from "../../utils/functions";
 import {TARGET} from "../../configs/variables";
 
 import style from '../index.module.scss';
@@ -24,7 +23,6 @@ Link.defaultProps = {
   className: '',
   disabled: false,
   href: '',
-  id: `react-button-${randomNumber(10000)}`,
   style: {},
   target: TARGET.BLANK
 };

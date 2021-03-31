@@ -8,6 +8,7 @@ import {Content, Link} from '../';
 import style from '../index.module.scss';
 
 const Button = (props) => {
+  const [id, setId] = useState('react-button');
   const [activeTimer, setActiveTimer] = useState(props.activeTimer && !!props.time);
   const [spinnerRatio, setSpinnerRatio] = useState(props.ratio);
   const [buttonStyles, setButtonStyles] = useState({});
@@ -22,12 +23,15 @@ const Button = (props) => {
   }, []);
 
   useEffect(() => {
+    const id = !isEmptyString(props.id) ? props.id : `react-button-${randomNumber(10000)}`;
+    setId(id);
+  }, [props.id]);
+
+  useEffect(() => {
     getRatio();
   }, [props.size]);
 
   useEffect(() => {
-    if (!props.time) return; // TODO: REMOVE this line when countdownTimer fix it
-
     calcButtonStyles();
     setActiveTimer(props.activeTimer);
   }, [props.activeTimer]);
@@ -70,7 +74,7 @@ const Button = (props) => {
   return (
     isEmptyString(props.href) ? (
       <button
-        id={props.id}
+        id={id}
         ref={buttonRef}
         disabled={props.disabled}
         type={props.type}
@@ -82,7 +86,7 @@ const Button = (props) => {
       </button>
     ) : (
       <Link
-        id={props.id}
+        id={id}
         disabled={props.disabled}
         ref={buttonRef}
         className={`${classes} ${button}`}
@@ -105,7 +109,6 @@ Button.defaultProps = {
   disabled: false,
   href: '',
   hrefTarget: TARGET.BLANK,
-  id: `react-button-${randomNumber(10000)}`,
   isIcon: false,
   isLoading: false,
   round: ROUNDED.LOW,
@@ -146,3 +149,5 @@ Button.propTypes = {
 };
 
 export default Button;
+
+// TODO: add rel prop to Link component

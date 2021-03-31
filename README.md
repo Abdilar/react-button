@@ -75,7 +75,7 @@ Name | Type | Default | Description
 **timeFormat**|`string`|`MM:SS`|Formats a time value.
 **className**|`object`|`{}`|Apply classes to the control button.
 **size**|`string`|`small`|Specifies the size of the button (size includes: `small`, `medium`, `large`, `xlarge`).
-**id**|`string`|`react-button-[randomNumber(10000)]`|The unique identifier for the component.
+**id**|`string`|`react-button-[randomNumber]`|The unique identifier for the component.
 **round**|`string`|`low`|Specifies the round border of the button. (round includes: `empty`, `low`, `more`, `fully`).
 **type**|`string`|`button`|Specifies the type of the button. (type includes: `button`, `submit`, `reset`).
 **variant**|`string`|`contained`|Specifies the variant of the button. (variant includes: `contained`, `outlined`, `text`).
