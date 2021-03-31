@@ -32,8 +32,6 @@ const Button = (props) => {
   }, [props.size]);
 
   useEffect(() => {
-    if (!props.time) return; // TODO: REMOVE this line when countdownTimer fix it
-
     calcButtonStyles();
     setActiveTimer(props.activeTimer);
   }, [props.activeTimer]);
