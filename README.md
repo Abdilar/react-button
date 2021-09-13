@@ -34,31 +34,7 @@ import Button, {SPINNER, COLOR, TARGET, ROUNDED, SIZE, TYPE, VARIANT} from '@sak
 import '@sakit-sa/react-button/dist/index.css';
 
 const App = () => (
-  <Button 
-    className={{}}
-    id="new-button" 
-    type={TYPE.BUTTON} 
-    variant={VARIANT.CONTAINED} 
-    timeClasses={{}}
-    timeFormat="MM:SS" 
-    isIcon={false}  
-    time={100} 
-    activeTimer={false} 
-    isLoading={false} 
-    round={ROUNDED.LOW} 
-    size={SIZE.SMALL} 
-    animatable={false} 
-    disabled={false} 
-    href="" 
-    hrefTarget={TARGET.BLANK} 
-    color={COLOR.PRIMARY} 
-    spinnerClasses={{}}
-    spinnerName={SPINNER.UIKIT} 
-    onCompleteTime={() => console.log('completed!')} 
-    onClick={() => console.log('click')}
-  >
-    Button
-  </Button>
+  <Button>Button</Button>
 );
 ```
 
