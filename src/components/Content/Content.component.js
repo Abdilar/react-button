@@ -7,13 +7,20 @@ import style from "../index.module.scss";
 
 const Content = (props) => {
   const {content = ''} = props.className;
-  const wrapper = props.spinnerClasses.wrapper ? {wrapper: props.spinnerClasses.wrapper} : {};
-  const spinner = props.spinnerClasses.spinner ? {spinner: `${props.spinnerClasses.spinner} ${style.react_display_inline_flex}`} : {spinner: style.react_display_inline_flex};
-  const spinnerClass = {...wrapper, ...spinner};
+  const wrapper = props.spinnerClasses.wrapper ? props.spinnerClasses.wrapper : '';
+  const spinner = props.spinnerClasses.spinner ? props.spinnerClasses.spinner : '';
+  const spinnerClass = {wrapper: `${style.react_display_flex} ${wrapper}`, sinner: `${style.react_display_inline_flex} ${spinner}`};
 
   return (
     <React.Fragment>
-      <span className={`${style.react_display_inline_block} ${style.react_content} ${props.isLoading ? style.react_content__hidden : ''} ${props.activatedTimer ? style.react_content__none : ''} ${content}`}>{props.children}</span>
+      {
+        !props.activatedTimer && (
+          <span
+            className={`${style.react_display_inline_block} ${style.react_content} ${props.isLoading ? style.react_content__hidden : ''} ${props.activatedTimer ? style.react_content__none : ''} ${content}`}>
+            {props.children}
+          </span>
+        )
+      }
       {
         props.activatedTimer && (
           <CountdownTimer time={props.time} format={props.timeFormat} className={props.timeClasses} onComplete={props.onCompletedTime} />

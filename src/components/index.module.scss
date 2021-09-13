@@ -212,13 +212,19 @@ $button-variant: (
   }
 }
 
-.react_display_inline {
-  &_block {
-    display: inline-block;
+.react_display {
+  &_inline {
+    &_block {
+      display: inline-block;
+    }
+
+    &_flex {
+      display: inline-flex;
+    }
   }
 
   &_flex {
-    display: inline-flex;
+    display: flex !important;
   }
 }
 
